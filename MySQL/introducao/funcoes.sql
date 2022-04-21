@@ -1,0 +1,28 @@
+SELECT NOME, CONCAT(ENDERECO_1, ', ', BAIRRO, ', ', CIDADE, '-', ESTADO) AS ENDERECO FROM tabela_de_clientes;
+
+SELECT NOME, TIMESTAMPDIFF(YEAR, DATA_DE_NASCIMENTO, CURDATE()) AS IDADE FROM tabela_de_clientes;
+
+SELECT notas_ficais.IMPOSTO FROM notas_fiscais inner join itens_notas_ficais
+ on notas_fiscais.NUMERO = itens_notas_ficais.NUMERO;
+ 
+ SELECT YEAR(DATA_VENDA) AS ANO, ROUND(SUM(PRECO * QUANTIDADE), 2) as TOTAL, FLOOR(SUM(PRECO * QUANTIDADE * IMPOSTO)) AS TOTAL_IMPOSTO
+ FROM notas_fiscais NF INNER JOIN itens_notas_fiscais INF
+ ON NF.NUMERO = INF.NUMERO
+ WHERE YEAR(DATA_VENDA) = 2016
+ GROUP BY YEAR(DATA_VENDA);
+ 
+ SELECT CONCAT('O cliente ', CL.NOME, ' faturou ', ROUND(SUM(QUANTIDADE * PRECO), 2), ' no ano de ', YEAR(DATA_VENDA)) AS RESULTADO
+ FROM notas_fiscais NF
+ INNER JOIN itens_notas_fiscais INF ON NF.NUMERO = INF.NUMERO
+ INNER JOIN tabela_de_clientes CL ON NF.CPF = CL.CPF
+ WHERE YEAR(DATA_VENDA) = 2016
+ GROUP BY CL.NOME, YEAR(DATA_VENDA);
+ 
+ SELECT CONCAT('O cliente ', TC.NOME, ' faturou ', 
+CAST(SUM(INF.QUANTIDADE * INF.preco) AS char (20))
+ , ' no ano ', CAST(YEAR(NF.DATA_VENDA) AS char (20))) AS SENTENCA FROM notas_fiscais NF
+INNER JOIN itens_notas_fiscais INF ON NF.NUMERO = INF.NUMERO
+INNER JOIN tabela_de_clientes TC ON NF.CPF = TC.CPF
+WHERE YEAR(DATA_VENDA) = 2016
+GROUP BY TC.NOME, YEAR(DATA_VENDA)
+ 
